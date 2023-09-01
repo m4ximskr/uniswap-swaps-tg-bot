@@ -1,0 +1,6 @@
+/dist
+/documents
+/node_modules
+/.idea
+.env
+random.txt

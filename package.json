@@ -1,0 +1,37 @@
+{
+  "name": "tg-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "nodemon src/app.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.5.6",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.3",
+    "@types/dotenv": "^8.2.0",
+    "@uniswap/v2-core": "^1.0.1",
+    "@uniswap/v3-core": "^1.0.1",
+    "dotenv": "^16.3.1",
+    "ethers": "^5.7.0",
+    "moment": "^2.29.4",
+    "rxjs": "^7.8.1",
+    "telegraf": "^4.12.2",
+    "telegraf-session-local": "^2.1.1",
+    "xlsx": "^0.18.5"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "sessions.json",
+      "analysis.xlsx"
+    ]
+  }
+}
