@@ -11,7 +11,7 @@ export class Bot {
 
   constructor() {
 
-    this.bot = new Telegraf<BotContext>(process.env.TG_BOT_API_TOKEN);
+    this.bot = new Telegraf<BotContext>(process.env.TG_BOT_API_TOKEN, {handlerTimeout: Infinity});
     const session = new LocalSession<UserLocalSession>({database: 'documents/sessions.json'})
     this.bot.use(session.middleware());
 
