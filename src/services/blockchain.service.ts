@@ -94,7 +94,7 @@ export class BlockchainService {
 
             case DexType.UNISWAP_V3:
               decoded = abiCoder.decode(['address', 'uint256', 'uint256', 'bytes', 'bool'], swapFunction.input);
-              preparedSwaps = getTokenPairsFromPath(getPathFromUniswapV3(decoded[3])).map(tokens => ({tokens, type: DexType.UNISWAP_V2}))
+              preparedSwaps = getTokenPairsFromPath(getPathFromUniswapV3(decoded[3])).map(tokens => ({tokens, type: DexType.UNISWAP_V3}))
               txSwaps.push(...preparedSwaps)
               break;
             default:
