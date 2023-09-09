@@ -46,3 +46,5 @@ export const contractFactoryMap: ContractFactoryMap = {
 
 export const availablePoolFees = [100, 500, 3000, 10000];
 
+export const etherscanCallsLimitPerSecond = 5;
+

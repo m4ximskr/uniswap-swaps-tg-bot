@@ -1,17 +1,15 @@
 import {Context} from "telegraf";
 
-export interface BotContext extends Context {
+export interface BotContext extends Context<any> {
   session?: UserLocalSession;
-}
-
-export interface Command {
-  registerHandlers(): void;
+  scene?: any;
 }
 
 export interface UserLocalSession {
-  role: UserRole,
-  requestCount: number;
-  limitEndsTimestamp: number;
+  role?: UserRole,
+  requestCount?: number;
+  limitEndsTimestamp?: number;
+  currentScene?: string;
 }
 
 export enum UserRole {
@@ -27,6 +25,16 @@ export interface AnalysisResult {
   poolAddress: string;
   date: string;
   dexType: string;
+}
+
+export enum BotScene {
+  ANALYZE = 'analyze-scene'
+}
+
+export enum MainSceneAction {
+  ANALYZE = 'analyze',
+  HELP = 'help',
+  MENU = 'menu',
 }
 
 

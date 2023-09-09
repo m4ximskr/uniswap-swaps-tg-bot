@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "build": "tsc",
+    "start": "node ./dist/app.js",
     "watch": "nodemon src/app.ts"
   },
   "author": "",
@@ -23,6 +24,7 @@
     "dotenv": "^16.3.1",
     "ethers": "^5.7.0",
     "moment": "^2.29.4",
+    "rxjs": "^7.8.1",
     "telegraf": "^4.12.2",
     "telegraf-session-local": "^2.1.1",
     "xlsx": "^0.18.5"

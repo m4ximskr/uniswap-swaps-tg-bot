@@ -8,7 +8,7 @@ export function getTokenPairsFromPath(path: string[]): string[][] {
   }, [])
 }
 
-export function getPathFromUniswapV3(fullPath) {
+export function getPathFromUniswapV3(fullPath: string): string[] {
   const fullPathWithoutHexSymbol = fullPath.substring(2);
   const path = [];
   let currentAddress = '';

@@ -1,31 +1,60 @@
-import {Markup, Telegraf} from "telegraf";
-import {BotContext, Command, UserRole} from "../../interfaces/bot.interface";
-import {requestLimitMap} from "../../constants/bot.constants";
-import {asyncCommandWrapper} from "../../utils/bot.utils";
+import { Markup, Telegraf} from "telegraf";
+import {BotContext, UserRole} from "../../shared/interfaces/bot.interface";
+import {requestLimitMap} from "../../shared/constants/bot.constants";
+import {BotService} from "../../shared/services/bot.service";
+import {Command} from "../../shared/classes/command.class";
 
-export class StartCommand implements Command {
-  constructor(private bot: Telegraf<BotContext>) {}
+enum StartCommandAction {
+  SET_ROLE_USER = 'set_role_user',
+  SET_ROLE_ANALYST = 'set_role_analyst'
+}
 
-  registerHandlers() {
-    this.bot.command('start', asyncCommandWrapper(async (ctx) => {
-      ctx.session = null;
-      await ctx.reply('Welcome to the eth wallet swaps analysis bot. Note that it counts only Uniswap swaps.');
-      await ctx.reply(
-        'Please select your role:',
-        Markup.inlineKeyboard([
-          Markup.button.callback('User', 'set_role_user'),
-          Markup.button.callback('Analyst', 'set_role_analyst'),
-        ])
-      )
-    }))
-
-    this.bot.action('set_role_user', this.setRoleAction.bind(this, UserRole.USER))
-    this.bot.action('set_role_analyst', this.setRoleAction.bind(this, UserRole.ANALYST))
+export class StartCommand extends Command {
+  constructor(
+    private bot: Telegraf<BotContext>,
+    private botService: BotService,
+  ) {
+    super(bot, botService);
   }
 
-  private async setRoleAction(role: UserRole, ctx) {
+  registerHandlers() {
+    this.bot.use(this.middleware.bind(this));
+
+    this.bot.command('start', async (ctx: BotContext) => {
+      ctx.session = null;
+      await ctx.sendMessage('Welcome to the eth wallet swaps analysis bot.');
+      await this.showSelectRole(ctx);
+    })
+
+    this.bot.action(StartCommandAction.SET_ROLE_USER, this.setRoleAction.bind(this, UserRole.USER))
+    this.bot.action(StartCommandAction.SET_ROLE_ANALYST, this.setRoleAction.bind(this, UserRole.ANALYST))
+  }
+
+  private async showSelectRole(ctx: BotContext) {
+    const msg = await ctx.sendMessage(
+      'Please select your role:',
+      Markup.inlineKeyboard([
+        Markup.button.callback('User', StartCommandAction.SET_ROLE_USER),
+        Markup.button.callback('Analyst', StartCommandAction.SET_ROLE_ANALYST),
+      ])
+    )
+    this.botService.previousMessageID = msg.message_id;
+  }
+
+  private async setRoleAction(role: UserRole, ctx: BotContext) {
     ctx.session.role = role;
-    await ctx.editMessageText(`Your role is ${ctx.session.role}. Request limit per day is ${requestLimitMap[ctx.session.role]}.`);
+    await ctx.sendMessage(`Your role is ${ctx.session.role}. Request limit per day is ${requestLimitMap[ctx.session.role]}.`);
+    await this.botService.showMenu(ctx);
     await ctx.answerCbQuery();
+  }
+
+  private async middleware(ctx: BotContext, next: () => Promise<void>) {
+    const actionData = (ctx.update as any).callback_query?.data;
+
+    if (ctx.session?.role || actionData === StartCommandAction.SET_ROLE_USER || actionData === StartCommandAction.SET_ROLE_ANALYST) {
+      await next();
+    } else {
+      await this.showSelectRole(ctx);
+    }
   }
 }

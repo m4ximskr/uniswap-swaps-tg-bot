@@ -7,6 +7,7 @@ export enum DexType {
 }
 
 export interface TransactionSwap {
+  timestamp: number;
   tokens: string[];
   type: DexType;
   poolFee?: number;

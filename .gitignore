@@ -1,6 +1,7 @@
 /dist
-/documents
 /node_modules
 /.idea
 .env
 random.txt
+analysis.xlsx
+sessions.json
