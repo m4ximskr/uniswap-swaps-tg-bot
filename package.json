@@ -5,15 +5,13 @@
   "main": "app.js",
   "scripts": {
     "build": "tsc",
-    "start": "node ./dist/app.js",
-    "watch": "nodemon src/app.ts"
+    "start": "node ./dist/app.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
     "@types/node": "^20.5.6",
-    "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   },
