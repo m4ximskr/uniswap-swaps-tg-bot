@@ -209,10 +209,7 @@ export class AnalyzeScene extends Scene {
          * Delay used to make sure 5 calls/sec are not exceeded
          */
         delay(this.oneSecInMilliSecs),
-        switchMap((txs) => {
-          txs = txs.slice(0, 100);
-          return this.processTransactionSwaps(txs)
-        }),
+        switchMap((txs) => this.processTransactionSwaps(txs)),
         switchMap((swaps: TransactionSwap[]) => this.processAnalysisResult(swaps)),
         tap(() => analysisFinished$.next({})),
       )
