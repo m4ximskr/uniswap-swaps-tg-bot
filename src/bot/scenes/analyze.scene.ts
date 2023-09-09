@@ -5,7 +5,7 @@ import {
   delay, filter,
   forkJoin,
   interval, map, mergeMap,
-  Observable, Subject,
+  Observable, startWith, Subject,
   Subscription,
   switchMap,
   take, takeUntil, tap, toArray
@@ -212,12 +212,14 @@ export class AnalyzeScene extends Scene {
         switchMap((txs) => this.processTransactionSwaps(txs)),
         switchMap((swaps: TransactionSwap[]) => this.processAnalysisResult(swaps)),
         tap(() => analysisFinished$.next({})),
+        startWith(null),
       )
 
     /**
      * Every 10 seconds show user a message to understand what's going on
      */
     const analysisProgress$ = interval(10000).pipe(
+      startWith(null),
       takeUntil(analysisFinished$),
       tap(async () => {
         if (analysisInProgressMessageID) {
@@ -225,12 +227,12 @@ export class AnalyzeScene extends Scene {
         }
         const msg = await ctx.sendMessage('⌛Analysis in progress...')
         analysisInProgressMessageID = msg.message_id;
-      })
-    );
+      }),
+  );
 
     this.analysisSubscription = combineLatest([analysisResult$, analysisProgress$])
       .pipe(
-        filter(([analysisResult]) => !!analysisResult),
+        filter(([analysisResult]) => analysisResult !== null),
         map(([analysisResult]) => analysisResult),
       )
       .subscribe(async (analysisResult) => {
